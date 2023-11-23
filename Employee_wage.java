@@ -9,13 +9,15 @@ public class Employee_wage {
         Random random = new Random();
         final int FULL_TIME=1;
         final int PART_TIME=2;
-        final int WORKING_DAYS = 20;
+        final int REQ_WORKING_DAYS = 20;
+        final int REQ_WORKING_HOURS= 100;
         int totalWage=0;
-        
-        for(int day=1;day<=WORKING_DAYS;day++)
+        int workingHours=0;
+        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
+        for (int day = 1, totalWorkingHours = 0; day <= REQ_WORKING_DAYS && totalWorkingHours < REQ_WORKING_HOURS; day++, totalWorkingHours += workingHours)
         {
             int isPresent = random.nextInt(3); // 0 for absent, 1 for full time present, 2 for part time present
-            int workingHours=0;
+            
 
             switch (isPresent) {
                 case FULL_TIME:
@@ -28,13 +30,16 @@ public class Employee_wage {
             
                 default:
                     //Employee is Absent
+                    workingHours=0;
                     break;
             }
             int dailyWage=calculateDailyEmployeeWage(workingHours);
             System.out.println("Day: " + day + " Wage:" + dailyWage); 
             totalWage += dailyWage;     
+            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHours, dailyWage, totalWorkingHours + workingHours);
         }
         System.out.println("Total wage for a month is " + totalWage);
+        
     }
 
     /*
