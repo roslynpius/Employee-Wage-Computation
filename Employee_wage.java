@@ -12,17 +12,22 @@ public class Employee_wage {
         int isPresent = random.nextInt(3); // 0 for absent, 1 for full time present, 2 for part time present
         int workingHours=0;
 
-        if (isPresent == FULL_TIME){
-            System.out.println("Employee is Present and is Full Time Employee");
-            workingHours=8;
-        } 
-        else if (isPresent == PART_TIME){
-            System.out.println("Employee is Present and is Part Time Employee");
-            workingHours=4;
+        switch (isPresent) {
+            case FULL_TIME:
+                System.out.println("Employee is Present and is Full Time Employee");
+                workingHours=8;                
+                break;
+
+            case PART_TIME:
+                System.out.println("Employee is Present and is Part Time Employee");
+                workingHours=4;
+                break;
+        
+            default:
+                System.out.println("Employee is Absent");
+                break;
         }
-        else {
-            System.out.println("Employee is Absent");
-        }
+
         //Usecase 2: calculate_daily_employee_wage
         calculateDailyEmployeeWage(workingHours);
     }
