@@ -2,21 +2,38 @@ package com.bridgelabz.Employee_Wage_Computation;
 import java.util.Random;
 
 /**
- * The EmployeeWageCalculator class models the computation of employee wages for multiple companies.
+ * The EmpWageBuilder class models the computation of employee wages for a specific company.
  */
-public class Employee_wage {
+class EmpWageBuilder {
+
+    private final String companyName;
+    private final int wagePerHour;
+    private final int workingDays;
+    private final int workingHours;
+
+    int totalWage;
 
     /**
-     * Computes the total employee wage for a company.
+     * Constructor to initialize company-specific parameters.
      *
-     * @param companyName     Name of the company.
-     * @param wagePerHour     Wage per hour for the company.
-     * @param workingDays     Number of working days per month.
-     * @param workingHours    Number of working hours per day.
+     * @param companyName   Name of the company.
+     * @param wagePerHour   Wage per hour for the company.
+     * @param workingDays   Number of working days per month.
+     * @param workingHours  Number of working hours per day.
      */
-    public static void computeEmployeeWage(String companyName, int wagePerHour, int workingDays, int workingHours) {
+    public EmpWageBuilder(String companyName, int wagePerHour, int workingDays, int workingHours) {
+        this.companyName = companyName;
+        this.wagePerHour = wagePerHour;
+        this.workingDays = workingDays;
+        this.workingHours = workingHours;
+        totalWage=0;
+    }
+
+    /**
+     * Computes the total employee wage for the company.
+     */
+    public void computeEmployeeWage() {
         Random random = new Random();
-        int totalWage = 0;
         System.out.printf("Company: %s\n", companyName);
         System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
 
@@ -29,7 +46,7 @@ public class Employee_wage {
                 default -> 0; // Employee is Absent
             };
 
-            int dailyWage = calculateDailyEmployeeWage(wagePerHour, workingHoursToday);
+            int dailyWage = calculateDailyEmployeeWage(workingHoursToday);
             System.out.println("Day: " + day + " Wage:" + dailyWage);
             totalWage += dailyWage;
             totalWorkingHours += workingHoursToday;
@@ -43,19 +60,24 @@ public class Employee_wage {
     }
 
     /**
-     * Calculates the daily employee wage based on the given wage per hour and working hours.
+     * Calculates the daily employee wage based on the given working hours.
      *
-     * @param wagePerHour    Wage per hour.
      * @param workingHours   Number of working hours in a day.
      * @return Daily employee wage.
      */
-    private static int calculateDailyEmployeeWage(int wagePerHour, int workingHours) {
+    private int calculateDailyEmployeeWage(int workingHours) {
         return wagePerHour * workingHours;
     }
+}
 
+public class Employee_wage {
     public static void main(String[] args) {
         // Example usage for two companies
-        computeEmployeeWage("ABC", 25, 20, 50);
-        computeEmployeeWage("XYZ", 30, 22, 25);
+        EmpWageBuilder companyA = new EmpWageBuilder("ABC", 25, 20, 8);
+        companyA.computeEmployeeWage();
+
+        EmpWageBuilder companyB = new EmpWageBuilder("XYZ", 30, 22, 9);
+        companyB.computeEmployeeWage();
     }
 }
+
