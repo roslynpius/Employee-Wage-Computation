@@ -2,82 +2,68 @@ package com.bridgelabz.Employee_Wage_Computation;
 import java.util.Random;
 
 /**
- * The CompanyEmpWage class represents the details of a specific company.
+ * The IEmpWageBuilder interface defines methods for managing employee wages for multiple companies.
  */
-class CompanyEmpWage {
-    final String COMPANY_NAME;
-    final int WAGE_PER_HOUR;
-    final int WORKING_DAYS;
-    final int WORKING_HOURS;
-    int total_wage;
+interface IEmpWageBuilder {
 
     /**
-     * Constructor to initialize company-specific parameters.
+     * Adds a company with its details.
      *
      * @param companyName   Name of the company.
      * @param wagePerHour   Wage per hour for the company.
      * @param workingDays   Number of working days per month.
      * @param workingHours  Number of working hours per day.
      */
-    public CompanyEmpWage(String companyName, int wagePerHour, int workingDays, int workingHours) {
-        this.COMPANY_NAME = companyName;
-        this.WAGE_PER_HOUR = wagePerHour;
-        this.WORKING_DAYS = workingDays;
-        this.WORKING_HOURS = workingHours;
-        total_wage=0;
-    }
+    void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours);
 
-    public String getCompanyName() {
-        return COMPANY_NAME;
-    }
-
-    public int getWagePerHour() {
-        return WAGE_PER_HOUR;
-    }
-
-    public int getWorkingDays() {
-        return WORKING_DAYS;
-    }
-
-    public int getWorkingHours() {
-        return WORKING_HOURS;
-    }
+    /**
+     * Computes the total employee wage for all managed companies.
+     */
+    void computeEmployeeWages();
 }
 
 /**
- * The EmpWageBuilder class manages the employee wage for multiple companies.
+ * The EmpWageBuilder class implements the IEmpWageBuilder interface.
  */
-class EmpWageBuilder {
+class EmpWageBuilder implements IEmpWageBuilder {
 
+    private static final int MAX_NUM_OF_COMPANIES = 10;
     private final CompanyEmpWage[] companyEmpWages;
+    private int numOfCompanies;
 
     /**
      * Constructor to initialize the array of CompanyEmpWage objects.
-     *
-     * @param numOfCompanies Number of companies to manage.
      */
-    public EmpWageBuilder(int numOfCompanies) {
-        companyEmpWages = new CompanyEmpWage[numOfCompanies];
+    public EmpWageBuilder() {
+        companyEmpWages = new CompanyEmpWage[MAX_NUM_OF_COMPANIES];
+        numOfCompanies = 0;
     }
 
     /**
      * Adds a company with its details to the array.
      *
-     * @param index           Index to add the company.
-     * @param companyEmpWage  CompanyEmpWage object representing the company details.
+     * @param companyName   Name of the company.
+     * @param wagePerHour   Wage per hour for the company.
+     * @param workingDays   Number of working days per month.
+     * @param workingHours  Number of working hours per day.
      */
-    public void addCompany(int index, CompanyEmpWage companyEmpWage) {
-        companyEmpWages[index] = companyEmpWage;
+    @Override
+    public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours) {
+        if (numOfCompanies < MAX_NUM_OF_COMPANIES) {
+            companyEmpWages[numOfCompanies] = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
+            numOfCompanies++;
+        } else {
+            System.out.println("Cannot add more companies. Maximum limit reached.");
+        }
     }
 
     /**
      * Computes the total employee wage for all managed companies.
      */
+    @Override
     public void computeEmployeeWages() {
-        for (CompanyEmpWage companyEmpWage : companyEmpWages) {
-            if (companyEmpWage != null) {
-                computeEmployeeWage(companyEmpWage);
-            }
+        for (int i = 0; i < numOfCompanies; i++) {
+            computeEmployeeWage(companyEmpWages[i]);
         }
     }
 
@@ -108,10 +94,8 @@ class EmpWageBuilder {
 
             System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHoursToday, dailyWage, totalWorkingHours);
         }
-        companyEmpWage.total_wage=totalWage;//saving total wage of company
+
         System.out.println("Total wage for the month at " + companyEmpWage.getCompanyName() + " is " + totalWage);
-        System.out.println();
-        System.out.println();
     }
 
     /**
@@ -126,13 +110,55 @@ class EmpWageBuilder {
     }
 }
 
-public class Employee_wage{
+/**
+ * The CompanyEmpWage class represents the details of a specific company.
+ */
+class CompanyEmpWage {
+
+    private final String companyName;
+    private final int wagePerHour;
+    private final int workingDays;
+    private final int workingHours;
+
+    /**
+     * Constructor to initialize company-specific parameters.
+     *
+     * @param companyName   Name of the company.
+     * @param wagePerHour   Wage per hour for the company.
+     * @param workingDays   Number of working days per month.
+     * @param workingHours  Number of working hours per day.
+     */
+    public CompanyEmpWage(String companyName, int wagePerHour, int workingDays, int workingHours) {
+        this.companyName = companyName;
+        this.wagePerHour = wagePerHour;
+        this.workingDays = workingDays;
+        this.workingHours = workingHours;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public int getWagePerHour() {
+        return wagePerHour;
+    }
+
+    public int getWorkingDays() {
+        return workingDays;
+    }
+
+    public int getWorkingHours() {
+        return workingHours;
+    }
+}
+
+public class Employee_wage {
     public static void main(String[] args) {
-        EmpWageBuilder empWageBuilder = new EmpWageBuilder(2);
+        IEmpWageBuilder empWageBuilder = new EmpWageBuilder();
 
         // Adding companies
-        empWageBuilder.addCompany(0, new CompanyEmpWage("CompanyA", 25, 20, 8));
-        empWageBuilder.addCompany(1, new CompanyEmpWage("CompanyB", 30, 22, 9));
+        empWageBuilder.addCompany("ABC", 25, 20, 8);
+        empWageBuilder.addCompany("XYZ", 30, 22, 9);
 
         // Computing employee wages for all companies
         empWageBuilder.computeEmployeeWages();
