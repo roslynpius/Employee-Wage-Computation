@@ -1,4 +1,6 @@
 package com.bridgelabz.Employee_Wage_Computation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -27,20 +29,17 @@ interface IEmpWageBuilder {
  */
 class EmpWageBuilder implements IEmpWageBuilder {
 
-    private static final int MAX_NUM_OF_COMPANIES = 10;
-    private final CompanyEmpWage[] companyEmpWages;
-    private int numOfCompanies;
+    private final List<CompanyEmpWage> companyEmpWages;
 
     /**
-     * Constructor to initialize the array of CompanyEmpWage objects.
+     * Constructor to initialize the list of CompanyEmpWage objects.
      */
     public EmpWageBuilder() {
-        companyEmpWages = new CompanyEmpWage[MAX_NUM_OF_COMPANIES];
-        numOfCompanies = 0;
+        companyEmpWages = new ArrayList<>();
     }
 
     /**
-     * Adds a company with its details to the array.
+     * Adds a company with its details to the list.
      *
      * @param companyName   Name of the company.
      * @param wagePerHour   Wage per hour for the company.
@@ -49,12 +48,7 @@ class EmpWageBuilder implements IEmpWageBuilder {
      */
     @Override
     public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours) {
-        if (numOfCompanies < MAX_NUM_OF_COMPANIES) {
-            companyEmpWages[numOfCompanies] = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
-            numOfCompanies++;
-        } else {
-            System.out.println("Cannot add more companies. Maximum limit reached.");
-        }
+        companyEmpWages.add(new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours));
     }
 
     /**
@@ -62,8 +56,8 @@ class EmpWageBuilder implements IEmpWageBuilder {
      */
     @Override
     public void computeEmployeeWages() {
-        for (int i = 0; i < numOfCompanies; i++) {
-            computeEmployeeWage(companyEmpWages[i]);
+        for (CompanyEmpWage companyEmpWage : companyEmpWages) {
+            computeEmployeeWage(companyEmpWage);
         }
     }
 
