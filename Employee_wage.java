@@ -16,27 +16,20 @@ public class Employee_wage {
         final int REQ_WORKING_DAYS = 20;
         final int REQ_WORKING_HOURS= 100;
         int totalWage=0;
-        int workingHours=0;
+        int workingHours;
         System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
         for (int day = 1, totalWorkingHours = 0; day <= REQ_WORKING_DAYS && totalWorkingHours < REQ_WORKING_HOURS; day++, totalWorkingHours += workingHours)
         {
             int isPresent = random.nextInt(3); // 0 for absent, 1 for full time present, 2 for part time present
-            
 
-            switch (isPresent) {
-                case FULL_TIME:
-                    workingHours=8;                
-                    break;
 
-                case PART_TIME:
-                    workingHours=4;
-                    break;
-            
-                default:
+            workingHours = switch (isPresent) {
+                case FULL_TIME -> 8;
+                case PART_TIME -> 4;
+                default ->
                     //Employee is Absent
-                    workingHours=0;
-                    break;
-            }
+                        0;
+            };
             int dailyWage=calculateDailyEmployeeWage(workingHours);
             System.out.println("Day: " + day + " Wage:" + dailyWage); 
             totalWage += dailyWage;     
@@ -49,13 +42,12 @@ public class Employee_wage {
     /*
     @param : workingHours - no. of working hours
     @desc : Calculate daily employee wage
+    @return : daily employee wage
     */
     private static int calculateDailyEmployeeWage(int workingHours) {
 
         final int WAGE_PER_HOUR = 20;
-        
-        int dailyWage = WAGE_PER_HOUR * workingHours;
 
-        return dailyWage;
+        return WAGE_PER_HOUR * workingHours;
     }
 }
