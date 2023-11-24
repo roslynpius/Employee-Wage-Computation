@@ -1,6 +1,10 @@
 package com.bridgelabz.Employee_Wage_Computation;
 import java.util.Random;
 
+/**
+ * The EmployeeWage class models the computation of employee wages based on attendance and working hours.
+ * It utilizes randomization for attendance checks and calculates daily wages, total monthly wage, and working hours.
+ */
 public class Employee_wage {   
     public static void main(String[] args)
     {
