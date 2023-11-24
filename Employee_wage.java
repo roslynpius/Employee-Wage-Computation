@@ -68,12 +68,12 @@ class EmpWageBuilder implements IEmpWageBuilder {
      */
     private void computeEmployeeWage(CompanyEmpWage companyEmpWage) {
         Random random = new Random();
-        int totalWage = 0;
+        int totalWageForMonth = 0;
         System.out.printf("Company: %s\n", companyEmpWage.getCompanyName());
-        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
+        System.out.printf("%5s     %5s     %5s     %5s    \n", "Day", "Workinghrs", "Wage", "Total working hrs");
 
         for (int day = 1, totalWorkingHours = 0; day <= companyEmpWage.getWorkingDays() && totalWorkingHours < companyEmpWage.getWorkingDays() * companyEmpWage.getWorkingHours(); day++) {
-            int isPresent = random.nextInt(3); // 0 for absent, 1 for full time present, 2 for part time present
+            int isPresent = random.nextInt(3); // 0 for absent, 1 for full time present, 2 for part-time present
 
             int workingHoursToday = switch (isPresent) {
                 case 1 -> 8;
@@ -82,14 +82,15 @@ class EmpWageBuilder implements IEmpWageBuilder {
             };
 
             int dailyWage = calculateDailyEmployeeWage(companyEmpWage.getWagePerHour(), workingHoursToday);
-            System.out.println("Day: " + day + " Wage:" + dailyWage);
-            totalWage += dailyWage;
+            int dailyTotalWage = totalWageForMonth + dailyWage;
+            System.out.println("Day: " + day + "       " + workingHoursToday + "            " + dailyWage + "        " + (totalWorkingHours + workingHoursToday) + "              ");
+            totalWageForMonth = dailyTotalWage;
             totalWorkingHours += workingHoursToday;
-
-            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHoursToday, dailyWage, totalWorkingHours);
+            companyEmpWage.addDailyWage(dailyWage);
         }
 
-        System.out.println("Total wage for the month at " + companyEmpWage.getCompanyName() + " is " + totalWage);
+        System.out.println("Total wage for the month at " + companyEmpWage.getCompanyName() + " is " + totalWageForMonth);
+        companyEmpWage.setTotalWage(totalWageForMonth);
     }
 
     /**
@@ -113,6 +114,8 @@ class CompanyEmpWage {
     private final int wagePerHour;
     private final int workingDays;
     private final int workingHours;
+    private final List<Integer> dailyWages;
+    private int totalWage;
 
     /**
      * Constructor to initialize company-specific parameters.
@@ -127,6 +130,8 @@ class CompanyEmpWage {
         this.wagePerHour = wagePerHour;
         this.workingDays = workingDays;
         this.workingHours = workingHours;
+        this.dailyWages = new ArrayList<>();
+        this.totalWage = 0;
     }
 
     public String getCompanyName() {
@@ -144,6 +149,14 @@ class CompanyEmpWage {
     public int getWorkingHours() {
         return workingHours;
     }
+
+    public void setTotalWage(int totalWage) {
+        this.totalWage = totalWage;
+    }
+
+    public void addDailyWage(int wage) {
+        dailyWages.add(wage);
+    }
 }
 
 public class Employee_wage {
@@ -151,8 +164,8 @@ public class Employee_wage {
         IEmpWageBuilder empWageBuilder = new EmpWageBuilder();
 
         // Adding companies
-        empWageBuilder.addCompany("ABC", 25, 20, 8);
-        empWageBuilder.addCompany("XYZ", 30, 22, 9);
+        empWageBuilder.addCompany("CompanyA", 25, 20, 8);
+        empWageBuilder.addCompany("CompanyB", 30, 22, 9);
 
         // Computing employee wages for all companies
         empWageBuilder.computeEmployeeWages();
