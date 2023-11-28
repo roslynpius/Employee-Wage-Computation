@@ -1,4 +1,4 @@
-package com.bridgelabz.Employee_Wage_Computation;
+package com.bridgelabz.employeewagecomputation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -190,7 +190,7 @@ class CompanyEmpWage {
     }
 }
 
-public class Employee_wage {
+public class EmployeeWage {
     public static void main(String[] args) {
         IEmpWageBuilder empWageBuilder = new EmpWageBuilder();
 
